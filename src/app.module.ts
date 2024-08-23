@@ -5,14 +5,17 @@ import { UsersModule } from './users/users.module';
 import { SeedModule } from './seed/seed.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ModuleModule } from './module/module.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { EnvConfigValidation } from './common/config/config';
 
 @Module({
   imports: [
     UsersModule,
     SeedModule,
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: EnvConfigValidation,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -27,7 +30,6 @@ import { PermissionsModule } from './permissions/permissions.module';
         synchronize: true,
       }),
     }),
-    ModuleModule,
     PermissionsModule,
   ],
   controllers: [AppController],
